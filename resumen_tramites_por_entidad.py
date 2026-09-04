@@ -4,6 +4,8 @@ import json
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from fetch_tramites_maestro import fetch_all_pages
+
 
 def resolve_entidad(value):
     if value is None:
@@ -70,6 +72,10 @@ def resumen_por_entidad(input_path: str, output_path: str, field_name: str, esta
     input_file = Path(input_path)
     output_file = Path(output_path)
     output_file.parent.mkdir(parents=True, exist_ok=True)
+
+    if not input_file.exists():
+        print(f"No existe {input_file}; descargando el CSV maestro.")
+        fetch_all_pages(str(input_file))
 
     with input_file.open("r", newline="", encoding="utf-8") as csvfile:
         reader = csv.DictReader(csvfile)
